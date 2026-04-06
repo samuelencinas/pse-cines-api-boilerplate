@@ -1,4 +1,5 @@
 
+// DTO para los filtros a findCinemas
 export interface CinemaFiltersDto {
   id?: number;
   sessionBefore?: Date;
@@ -7,6 +8,7 @@ export interface CinemaFiltersDto {
   withCatalog?: boolean;
 }
 
+// DTO para las carteleras
 export interface CinemaCatalogDto {
   id: number;
   title: string;
@@ -17,6 +19,7 @@ export interface CinemaCatalogDto {
   }>;
 }
 
+// DTO para la respuesta de findCinemas
 export interface CinemaResponseDto {
   id: number;
   name: string;

@@ -1,3 +1,4 @@
+// DTO para los filtros de findMovies
 export interface MovieFiltersDto {
   id?: number;
   sessionBefore?: Date;
@@ -5,6 +6,7 @@ export interface MovieFiltersDto {
   cast?: string[];
 }
 
+// DTO para la respuesta de findMovies
 export interface MovieResponseDto {
   id: number;
   title: string;

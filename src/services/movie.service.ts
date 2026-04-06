@@ -1,15 +1,19 @@
 import { prisma } from '../lib/db';
 import type { MovieFiltersDto, MovieResponseDto } from '../dto/movie.dto';
 import moment from 'moment';
-import type { Movie } from '../lib/generated/prisma/client';
+import type { Movie } from '@prisma/client';
 
+/**
+ * Lógica de negocio de películas
+ */
 export const MovieService = {
 
   // Obtención de películas
   async getMovies(filters: MovieFiltersDto): Promise<MovieResponseDto[]> {
     const { id, sessionBefore, sessionAfter, cast } = filters;
 
-    const movies: Movie[] = await prisma.movie.findMany({
+    // No se especifica el tipo de "movies" para que se produzca la inferencia automática
+    const movies = await prisma.movie.findMany({
       where: {
         id: id,
         // Filtramos por las fechas dentro de la tabla intermedia
@@ -33,18 +37,19 @@ export const MovieService = {
     });
 
     // Mapeamos el resultado para que coincida con nuestro DTO de respuesta
-    let results: MovieResponseDto[] = movies.map(movie => ({
+    let results: MovieResponseDto[] = movies.map((movie) => ({
       id: movie.id,
       title: movie.name,
       cast: movie.actors,
-      sessions: movie.showTimings.map(st => ({
+      sessions: movie.showTimings && movie.showTimings.length > 0 ? movie.showTimings.map(st => ({
         cinema: st.theater.name,
         day: moment(st.day).format('DD/MM/YYYY'),
         start: st.timing.start_time,
         end: st.timing.end_time
-      }))
+      })) : undefined
     }));
 
+    // Filtrado a posteriori por el reparto
     if (cast && cast.length > 0) {
       results = results.filter(movie => {
         const movieActors = movie.cast.split(',').map(a => a.trim());
@@ -52,6 +57,7 @@ export const MovieService = {
       });
     }
 
+    // Devolución de resultados mapeados
     return results;
   }
 

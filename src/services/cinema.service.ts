@@ -1,6 +1,7 @@
 import { prisma } from '../lib/db';
 import type { CinemaFiltersDto, CinemaResponseDto } from '../dto/cinema.dto';
 import moment from 'moment';
+import type { Theater } from '@prisma/client';
 
 export const CinemaService = {
 
@@ -12,6 +13,7 @@ export const CinemaService = {
     const dateGte: Date | undefined = sessionAfter ? new Date(sessionAfter) : undefined;
     const dateLte = sessionBefore ? new Date(sessionBefore) : undefined;
 
+    // No especificamos el tipo de "theaters" para que se produzca la inferencia automática
     const theaters = await prisma.theater.findMany({
       where: {
         id: filters.id,
@@ -25,7 +27,6 @@ export const CinemaService = {
         })
       },
       include: {
-        // Solo incluimos la tabla intermedia si se pide el catálogo
         showTimings: withCatalog ? {
           where: {
             ...(dateGte || dateLte ? { day: { gte: dateGte, lte: dateLte } } : {}),
@@ -39,7 +40,7 @@ export const CinemaService = {
       }
     });
 
-    // Mapeo profesional para devolver lo que la API espera (CinemaResponseDto)
+    // Mapeo profesional para devolver resultados acorde a CinemaResponseDto
     return theaters.map(theater => {
       const response: CinemaResponseDto = {
         id: theater.id,
@@ -47,8 +48,9 @@ export const CinemaService = {
         capacity: theater.capacity
       };
 
+      // Mapeo de carteleras y películas (solo si se ha solicitado y además tenemos sesiones)
       if (withCatalog && theater.showTimings) {
-        const movieMap = new Map<number, any>();
+        const movieMap: Map<number, any> = new Map<number, any>();
 
         theater.showTimings.forEach((st: any) => {
           if (!movieMap.has(st.movie_id)) {

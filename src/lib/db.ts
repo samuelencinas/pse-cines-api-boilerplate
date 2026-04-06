@@ -1,6 +1,6 @@
 import "dotenv/config";
 import { PrismaPg } from "@prisma/adapter-pg";
-import { PrismaClient } from "./generated/prisma/client";
+import { PrismaClient } from "@prisma/client";
 
 /**
  * Adaptador de Prisma para que exporte una constante "prisma" con el Client generado e importarla en otros servicios
