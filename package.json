@@ -1,17 +1,33 @@
 {
-  "name": "pse-api-boilerplate",
+  "name": "pse-cines-api-boilerplate",
   "version": "1.0.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon index.js"
+    "start": "nodemon --exec tsx src/main.ts"
   },
-  "author": "",
+  "author": "Samuel Encinas Plaza",
   "license": "ISC",
-  "description": "",
+  "description": "Express + TS + Prisma API boilerplate for PSE (2026) Cines app",
   "dependencies": {
+    "@mui/icons-material": "^7.3.9",
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "^7.4.2",
+    "cors": "^2.8.6",
+    "dotenv": "^17.3.1",
     "express": "^5.2.1",
-    "nodemon": "^3.1.14"
+    "moment": "^2.30.1",
+    "nodemon": "^3.1.14",
+    "pg": "^8.19.0"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/node": "^25.3.3",
+    "@types/pg": "^8.18.0",
+    "prisma": "^7.4.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.9.3"
   }
 }
